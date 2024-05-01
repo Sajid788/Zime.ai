@@ -1,14 +1,12 @@
-
-import './App.css'
+import "./App.css";
+import Routing from "./Routing/Routing";
 
 function App() {
-  
-
   return (
     <>
-     <h1>Hello world</h1>
+      <Routing />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
