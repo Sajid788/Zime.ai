@@ -1,38 +1,135 @@
-import React from 'react'
-import { Table, Input, Select, Pagination } from 'antd';
+import React, { useEffect, useState } from "react";
+import { Table, Input, Select, Pagination } from "antd";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 const { Search } = Input;
 const { Option } = Select;
 
 function PostsPage() {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [pagination, setPagination] = useState({
+      current: 1,
+      limit: 10,
+      total: 0,
+    });
+    const [searchQuery, setSearchQuery] = useState("");
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [allTags, setAllTags] = useState([]);
+  
+    useEffect(() => {
+      fetchData();
+    }, [location]);
+  
+    useEffect(() => {
+      const delaySearch = setTimeout(() => {
+        fetchData();
+      }, 500);
+      return () => clearTimeout(delaySearch);
+    }, [searchQuery, pagination.current, pagination.limit]);
+  
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `https://dummyjson.com/posts/search?q=${searchQuery}&skip=${
+            (pagination.current - 1) * pagination.limit
+          }&limit=${pagination.limit}`
+        );
+        const { posts, total } = response.data;
+        setPosts(posts);
+        setPagination((prevPagination) => ({
+          ...prevPagination,
+          total,
+        }));
+        const tags = posts.reduce((acc, post) => {
+          post.tags.forEach((tag) => {
+            if (!acc.includes(tag)) {
+              acc.push(tag);
+            }
+          });
+          return acc;
+        }, []);
+        setAllTags(tags);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      }
+    };
+  
+    const handlePaginationChange = (page, limit) => {
+      setPagination((prevPagination) => ({
+        ...prevPagination,
+        current: page,
+        limit,
+      }));
+      navigate(`?page=${page}`);
+    };
+  
+    const handleSearch = (value) => {
+      setSearchQuery(value);
+      setPagination((prevPagination) => ({
+        ...prevPagination,
+        current: 1, 
+      }));
+      navigate(`?page=1&search=${value}`);
+    };
+  
+    const handleTagChange = (value) => {
+      setSelectedTags(value);
+      setPagination((prevPagination) => ({
+        ...prevPagination,
+        current: 1, 
+      }));
+      navigate(`?page=1&tags=${value.join(",")}`);
+    };
+  
+
     const columns = [
+        {
+          title: "ID",
+          dataIndex: "id",
+          key: "id",
+        },
         {
           title: "Title",
           dataIndex: "title",
           key: "title",
-          className: "text-sky-600 font-semibold",
+          width: "22%",
         },
         {
           title: "Body",
           dataIndex: "body",
-          key: "body",
-          className: "text-gray-700",
+          width: "60%",
         },
         {
-          title: "Tags",
-          dataIndex: "tags",
-          key: "tags",
+            title: "Tags",
+            dataIndex: "tags",
+            key: "tags",
+            responsive: ["lg"],
           render: (tags) => (
             <span className="text-gray-600 capitalize">{tags.join(", ")}</span>
           ),
         },
       ];
     
+
+  const filteredPosts = selectedTags.length
+    ? posts.filter((post) =>
+        selectedTags.every((tag) => post.tags.includes(tag))
+      )
+    : posts;
+
   return (
     <>
-     <section className="bg-gray-100">
-        <div className="container mx-auto p-4 sm:p-8">
+      <section className="bg-gray-100">
+        <div className="p-4 md:p-14 mx-auto">
           <motion.h1
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -49,14 +146,24 @@ function PostsPage() {
           >
             <Search
               placeholder="Search posts"
+              onSearch={handleSearch}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              value={searchQuery}
               className="w-full max-w-md mb-4 sm:mb-0 sm:mr-4 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:border-blue-500"
             />
             <Select
               mode="multiple"
               style={{ minWidth: 200 }}
               placeholder="Select tags"
+              onChange={handleTagChange}
+              defaultValue={selectedTags}
               className="w-full sm:w-auto rounded-lg border border-gray-300 px-2 py-2 focus:outline-none focus:border-blue-500"
             >
+              {allTags.map((tag) => (
+                <Option key={tag} value={tag}>
+                  {tag}
+                </Option>
+              ))}
             </Select>
           </motion.div>
           <motion.div
@@ -65,8 +172,12 @@ function PostsPage() {
             transition={{ delay: 0.6, duration: 0.5 }}
             className="table-container overflow-x-auto rounded-lg shadow-lg"
           >
-            <Table
-              columns={columns}
+            <Table 
+             dataSource={filteredPosts}
+             columns={columns}
+             loading={loading}
+             pagination={false}
+             style={{ width: '100%' }}
             />
           </motion.div>
           <motion.div
@@ -75,8 +186,12 @@ function PostsPage() {
             transition={{ delay: 0.8, duration: 0.5 }}
             className="flex justify-center mt-4"
           >
-            <Pagination
-              className="text-blue-600"
+            <Pagination 
+            current={pagination.current}
+            pageSize={pagination.pageSize}
+            total={pagination.total}
+            onChange={handlePaginationChange}
+            className="text-blue-600" 
             />
           </motion.div>
         </div>
@@ -85,4 +200,4 @@ function PostsPage() {
   );
 }
 
-export default PostsPage
+export default PostsPage;
