@@ -102,6 +102,7 @@ function PostsPage() {
           dataIndex: "title",
           key: "title",
           width: "22%",
+          className: "text-gray-600 font-semibold",
         },
         {
           title: "Body",
@@ -114,7 +115,7 @@ function PostsPage() {
             key: "tags",
             responsive: ["lg"],
           render: (tags) => (
-            <span className="text-gray-600 capitalize">{tags.join(", ")}</span>
+            <span className="text-green-600 capitalize">{tags.join(", ")}</span>
           ),
         },
       ];
@@ -134,7 +135,7 @@ function PostsPage() {
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="text-3xl font-bold text-gray-600 mb-4"
+            className="text-3xl font-bold text-gray-700 mb-4"
           >
             Discover Great Posts
           </motion.h1>
@@ -149,15 +150,15 @@ function PostsPage() {
               onSearch={handleSearch}
               onChange={(e) => setSearchQuery(e.target.value)}
               value={searchQuery}
-              className="w-full max-w-md mb-4 sm:mb-0 sm:mr-4 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:border-blue-500"
+              className="w-full md:w-auto mb-4 sm:mb-0 sm:mr-4 rounded-lg px-2 y-2 focus:outline-none focus:border-blue-500"
             />
             <Select
               mode="multiple"
               style={{ minWidth: 200 }}
-              placeholder="Select tags"
+              placeholder="Filter"
               onChange={handleTagChange}
               defaultValue={selectedTags}
-              className="w-full sm:w-auto rounded-lg border border-gray-300 px-2 py-2 focus:outline-none focus:border-blue-500"
+              className="w-full sm:w-auto rounded-lg  px-2 py-2 focus:outline-none focus:border-blue-500"
             >
               {allTags.map((tag) => (
                 <Option key={tag} value={tag}>
