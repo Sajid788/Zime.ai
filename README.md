@@ -9,7 +9,7 @@ Discover a fantastic posts using this sleek and trendy feature. Effortlessly fin
 - Tailwind CSS
 
 ## Deploy Link
-link:- 
+link:- https://zimeai.netlify.app
 
 # Features
 - Search posts by keywords
@@ -53,3 +53,4 @@ npm run dev
 ## Scrrenshots
 
 ## Dashboard 
+![Screenshot 2024-05-02 132353](https://github.com/Sajid788/Zime.ai/assets/129252454/5cf8b23f-4e3a-41f0-9b11-d005a4c1bee7)
