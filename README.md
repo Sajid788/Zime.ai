@@ -5,6 +5,7 @@ Discover a fantastic posts using this sleek and trendy feature. Effortlessly fin
 
 ## Tech Stack
 - React.js
+- React Router
 - Ant Design
 - Tailwind CSS
 
@@ -15,6 +16,7 @@ link:- https://zimeai.netlify.app
 - Search posts by keywords
 - Filter posts by tags
 - Pagination support for easy navigation
+- Utilizes React Router for navigation between different views.
 - Stylish and responsive design
 
 # Usage
