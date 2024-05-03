@@ -53,4 +53,5 @@ npm run dev
 ## Scrrenshots
 
 ## Dashboard 
-![Screenshot 2024-05-02 132353](https://github.com/Sajid788/Zime.ai/assets/129252454/5cf8b23f-4e3a-41f0-9b11-d005a4c1bee7)
+![Screenshot 2024-05-03 103756](https://github.com/Sajid788/Zime.ai/assets/129252454/8acc7aa1-6552-42fe-ba22-30415b1ad4e4)
+
